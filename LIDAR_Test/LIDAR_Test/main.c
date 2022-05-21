@@ -4,11 +4,15 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdbool.h>
+#include <util/delay.h>
 
 #define BV(bit)                 (1 << (bit))
 #define SetBit(byte, bit)       (byte |= BV(bit))
 #define ClearBit(byte, bit)     (byte &= ~BV(bit))
 #define ToggleBit(byte, bit)    (byte ^= BV(bit))
+
+#define ServoHoek       OCR1A
+#define ServoPin        PB1     /// D9
 
 void Servo_Setup(void)
 {
@@ -35,7 +39,20 @@ int main(void)
     //ORC1A wordt gebruikt om de servo een positie te geven
     Servo_Setup;
 
+    SetBit(DDRB, ServoPin);
 
+
+
+    while(1)
+    {
+        _delay_ms(500);
+        ServoHoek = 4000;
+        _delay_ms(500);
+        ServoHoek = 2000;
+        _delay_ms(500);
+        ServoHoek = 1000;
+
+    }
     // Insert code
 
     while(1)
