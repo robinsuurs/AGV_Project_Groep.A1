@@ -14,6 +14,15 @@
 #define ServoHoek       OCR1A
 #define ServoPin        PB1     /// D9
 
+
+void Init_ADC(void)
+{
+    SetBit(ADMUX, REFS0);    //referentie voltage VCC
+    SetBit(ADCSRA, ADEN);    //zet ADC aan
+    ADCSRA |= BV(ADPS2) | BV(ADPS1) | BV(ADPS0); //prescale 128
+}
+
+
 void Servo_Setup(void)
 {
     //set fast PWM mode aan van timer1 met ICR1 als TOP waarde
@@ -32,6 +41,14 @@ void Servo_Setup(void)
     ICR1 = 40000; //20ms standaard voor servo pulsfrequentie
 
 }
+
+double MapRange(double X, double A1, double A2, double B1, double B2)
+{
+    double Y = B1 + (X-A1)*((B2-B1)/(A2-A1));
+    return Y;
+}
+
+
 
 int main(void)
 {
