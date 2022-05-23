@@ -54,7 +54,7 @@ int main(void)
 {
     ///aanzetten timer fuctie voor controle servo
     //ORC1A wordt gebruikt om de servo een positie te geven
-    Servo_Setup;
+    Servo_Setup();
 
     SetBit(DDRB, ServoPin);
 
@@ -62,12 +62,12 @@ int main(void)
 
     while(1)
     {
-        _delay_ms(500);
-        ServoHoek = 4000;
-        _delay_ms(500);
-        ServoHoek = 2000;
-        _delay_ms(500);
-        ServoHoek = 1000;
+        _delay_ms(1000);
+        ServoHoek = 4800; //180 graden
+        _delay_ms(1000);
+        ServoHoek = 3050; //90 graden
+        _delay_ms(1000);
+        ServoHoek = 1300; //0 graden
 
     }
     // Insert code

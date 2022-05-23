@@ -2,8 +2,9 @@
 1653135627 source:d:\git\agv_project_groep.a1\lidar_test\lidar_test\fuse.c
 	<avr/io.h>
 
-1653130389 source:d:\git\agv_project_groep.a1\lidar_test\lidar_test\main.c
+1653329339 source:d:\git\agv_project_groep.a1\lidar_test\lidar_test\main.c
 	<avr/io.h>
 	<avr/interrupt.h>
 	<stdbool.h>
+	<util/delay.h>
 
