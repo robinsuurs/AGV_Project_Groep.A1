@@ -14,9 +14,9 @@ void init_timer(void)
     ///timmer settup voor stepper motor
     ///gebruikt timer0 in CTC mode
     ///met een frequentie tussen 2 en 8 microSeconden
-    TCCR0A |= BV(COM0A0) | BV(WGM01);
-    TCCR0B |= BV(CS02);
-    OCR0A = 255; //max frequentie als start
+    TCCR0A = BV(COM0A0) | BV(WGM01);
+    TCCR0B = BV(CS02);
+    OCR0A = 170; //start snelheid
     SetBit(DDRD, PD6); //enable output timer
 
 }
@@ -24,7 +24,7 @@ void init_timer(void)
 
 int main(void)
 {
-
+    init_timer();
     // Insert code
 
     while(1)
