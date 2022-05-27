@@ -78,21 +78,21 @@ void init_timer(void)
   86:	de b7       	in	r29, 0x3e	; 62
     ///timmer settup voor stepper motor
     ///gebruikt timer0 in CTC mode
-    ///met een frequentie tussen 2 en 8 microSeconden
+    ///met snelheid tussen 180 als langzaamste en 135 als snelste
     TCCR0A = BV(COM0A0) | BV(WGM01);
   88:	e4 e4       	ldi	r30, 0x44	; 68
   8a:	f0 e0       	ldi	r31, 0x00	; 0
   8c:	82 e4       	ldi	r24, 0x42	; 66
   8e:	80 83       	st	Z, r24
-    TCCR0B = BV(CS02);
+    TCCR0B = BV(CS01) | BV(CS00);
   90:	e5 e4       	ldi	r30, 0x45	; 69
   92:	f0 e0       	ldi	r31, 0x00	; 0
-  94:	84 e0       	ldi	r24, 0x04	; 4
+  94:	83 e0       	ldi	r24, 0x03	; 3
   96:	80 83       	st	Z, r24
-    OCR0A = 170; //start snelheid
+    OCR0A = 185; //start snelheid
   98:	e7 e4       	ldi	r30, 0x47	; 71
   9a:	f0 e0       	ldi	r31, 0x00	; 0
-  9c:	8a ea       	ldi	r24, 0xAA	; 170
+  9c:	89 eb       	ldi	r24, 0xB9	; 185
   9e:	80 83       	st	Z, r24
     SetBit(DDRD, PD6); //enable output timer
   a0:	aa e2       	ldi	r26, 0x2A	; 42
