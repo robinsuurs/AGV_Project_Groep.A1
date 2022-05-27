@@ -11,14 +11,22 @@
 
 void init_timer(void)
 {
-    ///timmer settup voor stepper motor
+    ///timmer settup voor stepper motor1
     ///gebruikt timer0 in CTC mode
     ///met snelheid tussen 180 als langzaamste en 135 als snelste
-    TCCR0A = BV(COM0A0) | BV(WGM01);
-    TCCR0B = BV(CS01) | BV(CS00);
-    OCR0A = 185; //start snelheid
-    SetBit(DDRD, PD6); //enable output timer
+    TCCR0A  = BV(COM0A0) | BV(WGM01);
+    TCCR0B  = BV(CS01) | BV(CS00);  // clk/64
+    OCR0A   = 185;                  //start snelheid
+    SetBit(DDRD, PD6);              //enable output timer D6
 
+    ///timmer settup voor stepper motor2
+    ///gebruikt timer2 in CTC mode
+    ///met snelheid tussen 180 als langzaamste en 135 als snelste
+    TCCR2A  = BV(COM2A0) | BV(WGM21);
+    ClearBit(ASSR, AS2);// interne io klok geselecteerd
+    TCCR2B  = BV(CS22); // clk/64
+    OCR2A   = 185;      // start snelheid
+    SetBit(DDRB, PB3);  // enable output timer D11
 }
 
 

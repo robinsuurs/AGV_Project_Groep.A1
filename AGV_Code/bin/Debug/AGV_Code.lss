@@ -3,23 +3,23 @@ bin\Debug\AGV_Code.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000000c6  00000000  00000000  00000074  2**1
+  0 .text         000000fa  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .fuse         00000003  00820000  00820000  0000013a  2**0
+  1 .fuse         00000003  00820000  00820000  0000016e  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .debug_aranges 00000020  00000000  00000000  0000013d  2**0
+  2 .debug_aranges 00000020  00000000  00000000  00000171  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_pubnames 00000047  00000000  00000000  0000015d  2**0
+  3 .debug_pubnames 00000047  00000000  00000000  00000191  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_info   00000138  00000000  00000000  000001a4  2**0
+  4 .debug_info   00000138  00000000  00000000  000001d8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_abbrev 000000c9  00000000  00000000  000002dc  2**0
+  5 .debug_abbrev 000000c9  00000000  00000000  00000310  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_line   00000102  00000000  00000000  000003a5  2**0
+  6 .debug_line   0000012a  00000000  00000000  000003d9  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_frame  00000030  00000000  00000000  000004a8  2**2
+  7 .debug_frame  00000030  00000000  00000000  00000504  2**2
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_str    000000a0  00000000  00000000  000004d8  2**0
+  8 .debug_str    000000a0  00000000  00000000  00000534  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -59,8 +59,8 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 5a 00 	call	0xb4	; 0xb4 <main>
-  78:	0c 94 61 00 	jmp	0xc2	; 0xc2 <_exit>
+  74:	0e 94 74 00 	call	0xe8	; 0xe8 <main>
+  78:	0c 94 7b 00 	jmp	0xf6	; 0xf6 <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -76,25 +76,25 @@ void init_timer(void)
   82:	cf 93       	push	r28
   84:	cd b7       	in	r28, 0x3d	; 61
   86:	de b7       	in	r29, 0x3e	; 62
-    ///timmer settup voor stepper motor
+    ///timmer settup voor stepper motor1
     ///gebruikt timer0 in CTC mode
     ///met snelheid tussen 180 als langzaamste en 135 als snelste
-    TCCR0A = BV(COM0A0) | BV(WGM01);
+    TCCR0A  = BV(COM0A0) | BV(WGM01);
   88:	e4 e4       	ldi	r30, 0x44	; 68
   8a:	f0 e0       	ldi	r31, 0x00	; 0
   8c:	82 e4       	ldi	r24, 0x42	; 66
   8e:	80 83       	st	Z, r24
-    TCCR0B = BV(CS01) | BV(CS00);
+    TCCR0B  = BV(CS01) | BV(CS00);  // clk/64
   90:	e5 e4       	ldi	r30, 0x45	; 69
   92:	f0 e0       	ldi	r31, 0x00	; 0
   94:	83 e0       	ldi	r24, 0x03	; 3
   96:	80 83       	st	Z, r24
-    OCR0A = 185; //start snelheid
+    OCR0A   = 185;                  //start snelheid
   98:	e7 e4       	ldi	r30, 0x47	; 71
   9a:	f0 e0       	ldi	r31, 0x00	; 0
   9c:	89 eb       	ldi	r24, 0xB9	; 185
   9e:	80 83       	st	Z, r24
-    SetBit(DDRD, PD6); //enable output timer
+    SetBit(DDRD, PD6);              //enable output timer D6
   a0:	aa e2       	ldi	r26, 0x2A	; 42
   a2:	b0 e0       	ldi	r27, 0x00	; 0
   a4:	ea e2       	ldi	r30, 0x2A	; 42
@@ -103,26 +103,60 @@ void init_timer(void)
   aa:	80 64       	ori	r24, 0x40	; 64
   ac:	8c 93       	st	X, r24
 
+    ///timmer settup voor stepper motor2
+    ///gebruikt timer2 in CTC mode
+    ///met snelheid tussen 180 als langzaamste en 135 als snelste
+    TCCR2A  = BV(COM2A0) | BV(WGM21);
+  ae:	e0 eb       	ldi	r30, 0xB0	; 176
+  b0:	f0 e0       	ldi	r31, 0x00	; 0
+  b2:	82 e4       	ldi	r24, 0x42	; 66
+  b4:	80 83       	st	Z, r24
+    ClearBit(ASSR, AS2);// interne io klok geselecteerd
+  b6:	a6 eb       	ldi	r26, 0xB6	; 182
+  b8:	b0 e0       	ldi	r27, 0x00	; 0
+  ba:	e6 eb       	ldi	r30, 0xB6	; 182
+  bc:	f0 e0       	ldi	r31, 0x00	; 0
+  be:	80 81       	ld	r24, Z
+  c0:	8f 7d       	andi	r24, 0xDF	; 223
+  c2:	8c 93       	st	X, r24
+    TCCR2B  = BV(CS22); // clk/64
+  c4:	e1 eb       	ldi	r30, 0xB1	; 177
+  c6:	f0 e0       	ldi	r31, 0x00	; 0
+  c8:	84 e0       	ldi	r24, 0x04	; 4
+  ca:	80 83       	st	Z, r24
+    OCR2A   = 185;      // start snelheid
+  cc:	e3 eb       	ldi	r30, 0xB3	; 179
+  ce:	f0 e0       	ldi	r31, 0x00	; 0
+  d0:	89 eb       	ldi	r24, 0xB9	; 185
+  d2:	80 83       	st	Z, r24
+    SetBit(DDRB, PB3);  // enable output timer D11
+  d4:	a4 e2       	ldi	r26, 0x24	; 36
+  d6:	b0 e0       	ldi	r27, 0x00	; 0
+  d8:	e4 e2       	ldi	r30, 0x24	; 36
+  da:	f0 e0       	ldi	r31, 0x00	; 0
+  dc:	80 81       	ld	r24, Z
+  de:	88 60       	ori	r24, 0x08	; 8
+  e0:	8c 93       	st	X, r24
 }
-  ae:	cf 91       	pop	r28
-  b0:	df 91       	pop	r29
-  b2:	08 95       	ret
+  e2:	cf 91       	pop	r28
+  e4:	df 91       	pop	r29
+  e6:	08 95       	ret
 
-000000b4 <main>:
+000000e8 <main>:
 
 
 int main(void)
 {
-  b4:	df 93       	push	r29
-  b6:	cf 93       	push	r28
-  b8:	cd b7       	in	r28, 0x3d	; 61
-  ba:	de b7       	in	r29, 0x3e	; 62
+  e8:	df 93       	push	r29
+  ea:	cf 93       	push	r28
+  ec:	cd b7       	in	r28, 0x3d	; 61
+  ee:	de b7       	in	r29, 0x3e	; 62
     init_timer();
-  bc:	0e 94 40 00 	call	0x80	; 0x80 <init_timer>
-  c0:	ff cf       	rjmp	.-2      	; 0xc0 <main+0xc>
+  f0:	0e 94 40 00 	call	0x80	; 0x80 <init_timer>
+  f4:	ff cf       	rjmp	.-2      	; 0xf4 <main+0xc>
 
-000000c2 <_exit>:
-  c2:	f8 94       	cli
+000000f6 <_exit>:
+  f6:	f8 94       	cli
 
-000000c4 <__stop_program>:
-  c4:	ff cf       	rjmp	.-2      	; 0xc4 <__stop_program>
+000000f8 <__stop_program>:
+  f8:	ff cf       	rjmp	.-2      	; 0xf8 <__stop_program>

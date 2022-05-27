@@ -2,3 +2,8 @@
 1652729203 source:d:\git\agv_project_groep.a1\agv_code\fuse.c
 	<avr/io.h>
 
+1653679196 source:d:\git\agv_project_groep.a1\agv_code\main.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	<stdbool.h>
+
