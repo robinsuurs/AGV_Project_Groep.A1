@@ -3,23 +3,23 @@ bin\Debug\AGV_Code.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000008e  00000000  00000000  00000074  2**1
+  0 .text         000000ce  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .fuse         00000003  00820000  00820000  00000102  2**0
+  1 .fuse         00000003  00820000  00820000  00000142  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .debug_aranges 00000020  00000000  00000000  00000105  2**0
+  2 .debug_aranges 00000020  00000000  00000000  00000145  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_pubnames 00000038  00000000  00000000  00000125  2**0
+  3 .debug_pubnames 00000047  00000000  00000000  00000165  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_info   00000124  00000000  00000000  0000015d  2**0
+  4 .debug_info   00000138  00000000  00000000  000001ac  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_abbrev 000000b4  00000000  00000000  00000281  2**0
+  5 .debug_abbrev 000000c9  00000000  00000000  000002e4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_line   000000ca  00000000  00000000  00000335  2**0
+  6 .debug_line   000000fa  00000000  00000000  000003ad  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_frame  00000020  00000000  00000000  00000400  2**2
+  7 .debug_frame  00000030  00000000  00000000  000004a8  2**2
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_str    00000095  00000000  00000000  00000420  2**0
+  8 .debug_str    000000a0  00000000  00000000  000004d8  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -59,27 +59,74 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 40 00 	call	0x80	; 0x80 <main>
-  78:	0c 94 45 00 	jmp	0x8a	; 0x8a <_exit>
+  74:	0e 94 60 00 	call	0xc0	; 0xc0 <main>
+  78:	0c 94 65 00 	jmp	0xca	; 0xca <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
-00000080 <main>:
+00000080 <init_timer>:
+#define SetBit(byte, bit)       (byte |= BV(bit))
 #define ClearBit(byte, bit)     (byte &= ~BV(bit))
 #define ToggleBit(byte, bit)    (byte ^= BV(bit))
 
-
-int main(void)
+void init_timer(void)
 {
   80:	df 93       	push	r29
   82:	cf 93       	push	r28
   84:	cd b7       	in	r28, 0x3d	; 61
   86:	de b7       	in	r29, 0x3e	; 62
-  88:	ff cf       	rjmp	.-2      	; 0x88 <main+0x8>
+    ///timmer settup voor stepper motor
+    ///gebruikt timer0 in CTC mode
+    ///met een frequentie tussen 2 en 8 microSeconden
+    TCCR0A |= BV(COM0A0) | BV(WGM01);
+  88:	a4 e4       	ldi	r26, 0x44	; 68
+  8a:	b0 e0       	ldi	r27, 0x00	; 0
+  8c:	e4 e4       	ldi	r30, 0x44	; 68
+  8e:	f0 e0       	ldi	r31, 0x00	; 0
+  90:	80 81       	ld	r24, Z
+  92:	82 64       	ori	r24, 0x42	; 66
+  94:	8c 93       	st	X, r24
+    TCCR0B |= BV(CS02);
+  96:	a5 e4       	ldi	r26, 0x45	; 69
+  98:	b0 e0       	ldi	r27, 0x00	; 0
+  9a:	e5 e4       	ldi	r30, 0x45	; 69
+  9c:	f0 e0       	ldi	r31, 0x00	; 0
+  9e:	80 81       	ld	r24, Z
+  a0:	84 60       	ori	r24, 0x04	; 4
+  a2:	8c 93       	st	X, r24
+    OCR0A = 255; //max frequentie als start
+  a4:	e7 e4       	ldi	r30, 0x47	; 71
+  a6:	f0 e0       	ldi	r31, 0x00	; 0
+  a8:	8f ef       	ldi	r24, 0xFF	; 255
+  aa:	80 83       	st	Z, r24
+    SetBit(DDRD, PD6); //enable output timer
+  ac:	aa e2       	ldi	r26, 0x2A	; 42
+  ae:	b0 e0       	ldi	r27, 0x00	; 0
+  b0:	ea e2       	ldi	r30, 0x2A	; 42
+  b2:	f0 e0       	ldi	r31, 0x00	; 0
+  b4:	80 81       	ld	r24, Z
+  b6:	80 64       	ori	r24, 0x40	; 64
+  b8:	8c 93       	st	X, r24
 
-0000008a <_exit>:
-  8a:	f8 94       	cli
+}
+  ba:	cf 91       	pop	r28
+  bc:	df 91       	pop	r29
+  be:	08 95       	ret
 
-0000008c <__stop_program>:
-  8c:	ff cf       	rjmp	.-2      	; 0x8c <__stop_program>
+000000c0 <main>:
+
+
+int main(void)
+{
+  c0:	df 93       	push	r29
+  c2:	cf 93       	push	r28
+  c4:	cd b7       	in	r28, 0x3d	; 61
+  c6:	de b7       	in	r29, 0x3e	; 62
+  c8:	ff cf       	rjmp	.-2      	; 0xc8 <main+0x8>
+
+000000ca <_exit>:
+  ca:	f8 94       	cli
+
+000000cc <__stop_program>:
+  cc:	ff cf       	rjmp	.-2      	; 0xcc <__stop_program>

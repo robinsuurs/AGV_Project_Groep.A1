@@ -1,0 +1,4 @@
+# depslib dependency file v1.0
+1652729203 source:d:\git\agv_project_groep.a1\agv_code\fuse.c
+	<avr/io.h>
+
