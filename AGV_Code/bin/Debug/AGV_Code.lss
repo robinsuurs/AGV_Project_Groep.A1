@@ -89,10 +89,10 @@ void init_timer(void)
   92:	f0 e0       	ldi	r31, 0x00	; 0
   94:	84 e0       	ldi	r24, 0x04	; 4
   96:	80 83       	st	Z, r24
-    OCR0A   = 70;                   //start snelheid
+    OCR0A   = 15;                   //start snelheid
   98:	e7 e4       	ldi	r30, 0x47	; 71
   9a:	f0 e0       	ldi	r31, 0x00	; 0
-  9c:	86 e4       	ldi	r24, 0x46	; 70
+  9c:	8f e0       	ldi	r24, 0x0F	; 15
   9e:	80 83       	st	Z, r24
     SetBit(DDRD, PD6);              //enable output timer D6
   a0:	aa e2       	ldi	r26, 0x2A	; 42
@@ -124,10 +124,10 @@ void init_timer(void)
   c6:	f0 e0       	ldi	r31, 0x00	; 0
   c8:	86 e0       	ldi	r24, 0x06	; 6
   ca:	80 83       	st	Z, r24
-    OCR2A   = 70;                    // start snelheid
+    OCR2A   = 15;                    // start snelheid
   cc:	e3 eb       	ldi	r30, 0xB3	; 179
   ce:	f0 e0       	ldi	r31, 0x00	; 0
-  d0:	86 e4       	ldi	r24, 0x46	; 70
+  d0:	8f e0       	ldi	r24, 0x0F	; 15
   d2:	80 83       	st	Z, r24
     SetBit(DDRB, PB3);               // enable output timer D11
   d4:	a4 e2       	ldi	r26, 0x24	; 36
