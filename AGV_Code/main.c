@@ -9,6 +9,12 @@
 #define ClearBit(byte, bit)     (byte &= ~BV(bit))
 #define ToggleBit(byte, bit)    (byte ^= BV(bit))
 
+double MapRange(double X, double A1, double A2, double B1, double B2)
+{
+    double Y = B1 + (X-A1)*((B2-B1)/(A2-A1));
+    return Y;
+}
+
 void init_timer(void)
 {
     ///timmer settup voor stepper motor1
