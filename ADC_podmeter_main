@@ -1,0 +1,21 @@
+#include <avr/io.h>
+#include <stdlib.h>
+#include <util/delay.h>
+
+volatile uint16_t ADC_waarde;
+volatile uint16_t ADC_waarde_2;
+volatile uint16_t verschil;
+
+void init_adc(void)
+{
+    ADMUX |= (1 << REFS0);                                  // AVCC als referentiespanning
+    ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // Prescaler
+    ADCSRA |= (1 << ADEN);                                  // Aanzetten ADC
+
+}
+
+void ADC_Check(void)
+{
+    ADCSRA |= (1 << ADSC);  // coversatie starten
+    ADC_waarde = ADC;       // waarde meegeven
+}
