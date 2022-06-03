@@ -16,6 +16,25 @@ void init_adc(void)
 
 void ADC_Check(void)
 {
-    ADCSRA |= (1 << ADSC);  // coversatie starten
-    ADC_waarde = ADC;       // waarde meegeven
+    // Waarde 1 genereren
+    ADMUX &= ~(1 << MUX0);                          // ADC op poort 0
+    ADCSRA |= (1 << ADSC);                          // Conversatie starten
+    while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
+    ADC_waarde = ADC;                               // Waarde meegeven aan variabele
+    
+    // Waarde 2 genereren
+    ADMUX |= (1 << MUX0);                           // ADC op poort 1
+    ADCSRA |= (1 << ADSC);                          // Conversatie starten
+    while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
+    ADC_waarde_2 = ADC;                             // Waarde meegeven aan variabele
+    
+    // positief verschil genereren
+    if(ADC_waarde < ADC_waarde_2);
+    {
+        verschil = ADC_waarde_2 - ADC_waarde;
+    }
+    if(ADC_waarde > ADC_waarde_2);
+    {
+        verschil = ADC_waarde - ADC_waarde_2;
+    }
 }
