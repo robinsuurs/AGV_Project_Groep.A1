@@ -9,6 +9,10 @@
 #define ClearBit(byte, bit)     (byte &= ~BV(bit))
 #define ToggleBit(byte, bit)    (byte ^= BV(bit))
 
+volatile uint16_t ADC_waarde;
+volatile uint16_t ADC_waarde_2;
+volatile uint16_t verschil;
+
 double MapRange(double X, double A1, double A2, double B1, double B2)
 {
     double Y = B1 + (X-A1)*((B2-B1)/(A2-A1));
@@ -35,6 +39,38 @@ void init_timer(void)
     SetBit(DDRB, PB3);               // enable output timer D11
 }
 
+void init_adc(void)
+{
+    ADMUX |= (1 << REFS0);                                  // AVCC als referentiespanning
+    ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // Prescaler 128 125kHZ
+    ADCSRA |= (1 << ADEN);                                  // Aanzetten ADC
+
+}
+
+void ADC_Check(void)
+{
+    // Waarde 1 genereren
+    ADMUX &= ~(1 << MUX0);                          // ADC op poort 0
+    ADCSRA |= (1 << ADSC);                          // Conversatie starten
+    while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
+    ADC_waarde = ADC;                               // Waarde meegeven aan variabele
+
+    // Waarde 2 genereren
+    ADMUX |= (1 << MUX0);                           // ADC op poort 1
+    ADCSRA |= (1 << ADSC);                          // Conversatie starten
+    while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
+    ADC_waarde_2 = ADC;                             // Waarde meegeven aan variabele
+
+    // positief verschil genereren
+    if(ADC_waarde < ADC_waarde_2);
+    {
+        verschil = ADC_waarde_2 - ADC_waarde;
+    }
+    if(ADC_waarde > ADC_waarde_2);
+    {
+        verschil = ADC_waarde - ADC_waarde_2;
+    }
+}
 
 int main(void)
 {
