@@ -12,6 +12,18 @@
 volatile uint16_t ADC_waarde;
 volatile uint16_t ADC_waarde_2;
 volatile uint16_t verschil;
+volatile int8_t ADC_pin;
+
+ISR(ADC_vect)
+{
+    ADC_waarde = ADC;
+    for(ADC_pin; ADC_pin < 3; ++ADC_pin)
+    {
+        ADMUX = (0XF0 & ADMUX) | ADC_pin;
+        SetBit(ADCSRA, ADSC);
+        break;
+    }
+}
 
 double MapRange(double X, double A1, double A2, double B1, double B2)
 {
@@ -43,7 +55,7 @@ void init_adc(void)
 {
     ADMUX |= (1 << REFS0);                                  // AVCC als referentiespanning
     ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // Prescaler 128 125kHZ
-    ADCSRA |= (1 << ADEN);                                  // Aanzetten ADC
+    ADCSRA |= (1 << ADEN) | BV(ADIE);                       // Aanzetten ADC
 
 }
 
@@ -65,6 +77,7 @@ void ADC_Check(void)
     if(ADC_waarde < ADC_waarde_2);
     {
         verschil = ADC_waarde_2 - ADC_waarde;
+
     }
     if(ADC_waarde > ADC_waarde_2);
     {
