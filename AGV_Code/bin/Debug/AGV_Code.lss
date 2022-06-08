@@ -409,7 +409,7 @@ void init_adc(void)
  2b0:	80 81       	ld	r24, Z
  2b2:	80 64       	ori	r24, 0x40	; 64
  2b4:	8c 93       	st	X, r24
-    ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // Prescaler 128 125kHZ
+    ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // Prescaler clk/128 = 125kHZ
  2b6:	ea e7       	ldi	r30, 0x7A	; 122
  2b8:	f0 e0       	ldi	r31, 0x00	; 0
  2ba:	87 e0       	ldi	r24, 0x07	; 7

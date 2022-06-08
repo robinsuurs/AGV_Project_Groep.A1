@@ -52,7 +52,7 @@ void init_timer(void)
 void init_adc(void)
 {
     ADMUX |= (1 << REFS0);                                  // AVCC als referentiespanning
-    ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // Prescaler 128 125kHZ
+    ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // Prescaler clk/128 = 125kHZ
     ADCSRA |= (1 << ADEN) | BV(ADIE);                       // Aanzetten ADC
 
     // Waarde 1 genereren
