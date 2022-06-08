@@ -9,14 +9,12 @@
 #define ClearBit(byte, bit)     (byte &= ~BV(bit))
 #define ToggleBit(byte, bit)    (byte ^= BV(bit))
 
-volatile uint16_t ADC_waarde;
-volatile uint16_t ADC_waarde_2;
-volatile uint16_t verschil;
+volatile uint16_t ADC_waarde[3];
 volatile int8_t ADC_pin;
 
 ISR(ADC_vect)
 {
-    ADC_waarde = ADC;
+    ADC_waarde[ADC_pin] = ADC;
     for(ADC_pin; ADC_pin < 3; ++ADC_pin)
     {
         ADMUX = (0XF0 & ADMUX) | ADC_pin;
@@ -57,41 +55,32 @@ void init_adc(void)
     ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // Prescaler 128 125kHZ
     ADCSRA |= (1 << ADEN) | BV(ADIE);                       // Aanzetten ADC
 
-}
-
-void ADC_Check(void)
-{
     // Waarde 1 genereren
     ADMUX &= ~(1 << MUX0);                          // ADC op poort 0
     ADCSRA |= (1 << ADSC);                          // Conversatie starten
-    while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
-    ADC_waarde = ADC;                               // Waarde meegeven aan variabele
-
-    // Waarde 2 genereren
-    ADMUX |= (1 << MUX0);                           // ADC op poort 1
-    ADCSRA |= (1 << ADSC);                          // Conversatie starten
-    while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
-    ADC_waarde_2 = ADC;                             // Waarde meegeven aan variabele
-
-    // positief verschil genereren
-    if(ADC_waarde < ADC_waarde_2);
-    {
-        verschil = ADC_waarde_2 - ADC_waarde;
-
-    }
-    if(ADC_waarde > ADC_waarde_2);
-    {
-        verschil = ADC_waarde - ADC_waarde_2;
-    }
 }
+
 
 int main(void)
 {
     init_timer();
+    init_adc();
     // Insert code
 
     while(1)
-    ;
+    {
+        if(ADC_waarde[0] <= ADC_waarde[1])
+        {
+            OCR0A = 70;     //slow speed
+            OCR2A = 15;     //full speed
+        }
+        else if(ADC_waarde[0] > ADC_waarde[1])
+        {
+            OCR2A = 70;     //slowspeed
+            OCR0A = 15;     //fullspeed
+        }
+    }
+
 
     return 0;
 }
