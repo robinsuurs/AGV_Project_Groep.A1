@@ -65,19 +65,27 @@ void ADC_Check(void)
     if(ADC_waarde < ADC_waarde_2);
     {
         verschil = ADC_waarde_2 - ADC_waarde;
+        OCR2A = 15;
+        OCR0A = 70;
     }
     if(ADC_waarde > ADC_waarde_2);
     {
         verschil = ADC_waarde - ADC_waarde_2;
+        OCR0A = 15;
+        OCR2A = 70;
     }
 }
 
 int main(void)
 {
     init_timer();
+    init_adc();
+
     // Insert code
 
     while(1)
+        ADC_Check();
+
     ;
 
     return 0;
