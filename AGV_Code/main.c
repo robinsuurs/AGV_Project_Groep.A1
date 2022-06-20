@@ -8,8 +8,9 @@
 #define SetBit(byte, bit)       (byte |= BV(bit))
 #define ClearBit(byte, bit)     (byte &= ~BV(bit))
 #define ToggleBit(byte, bit)    (byte ^= BV(bit))
-
-volatile uint16_t ADC_waarde;
+volatile uint16_t POT0_BEGIN;
+volatile uint16_t POT2_BEGIN;
+volatile uint16_t ADC_waarde_0;
 volatile uint16_t ADC_waarde_2;
 volatile uint16_t verschil;
 
@@ -45,6 +46,22 @@ void init_adc(void)
     ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // Prescaler 128 125kHZ
     ADCSRA |= (1 << ADEN);                                  // Aanzetten ADC
 
+
+    // Waarde 1 genereren
+    ADMUX &= ~(1 << MUX0);                          // ADC op poort 0
+    ADCSRA |= (1 << ADSC);                          // Conversatie starten
+    while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
+    POT0_BEGIN = ADC;                               // Waarde meegeven aan variabele
+
+
+    // Waarde 2 genereren
+    ADMUX |= (1 << MUX0);                           // ADC op poort 1
+    ADCSRA |= (1 << ADSC);                          // Conversatie starten
+    while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
+    POT2_BEGIN = ADC;                             // Waarde meegeven aan variabele
+
+
+
 }
 
 void ADC_Check(void)
@@ -53,8 +70,8 @@ void ADC_Check(void)
     ADMUX &= ~(1 << MUX0);                          // ADC op poort 0
     ADCSRA |= (1 << ADSC);                          // Conversatie starten
     while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
-    ADC_waarde = ADC;                               // Waarde meegeven aan variabele
-    ADC_waarde = MapRange(ADC_waarde, 0, 1024, 70, 15);
+    ADC_waarde_0 = ADC;                               // Waarde meegeven aan variabele
+    ADC_waarde_0 = MapRange(ADC_waarde_0, 0, 1024, 70, 15);
 
     // Waarde 2 genereren
     ADMUX |= (1 << MUX0);                           // ADC op poort 1
@@ -63,7 +80,7 @@ void ADC_Check(void)
     ADC_waarde_2 = ADC;                             // Waarde meegeven aan variabele
     ADC_waarde_2 = MapRange(ADC_waarde_2, 0, 1024, 70, 15);
 
-    OCR0A = ADC_waarde;
+    OCR0A = ADC_waarde_0;
     OCR2A = ADC_waarde_2;
 
 
