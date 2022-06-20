@@ -54,26 +54,20 @@ void ADC_Check(void)
     ADCSRA |= (1 << ADSC);                          // Conversatie starten
     while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
     ADC_waarde = ADC;                               // Waarde meegeven aan variabele
+    ADC_waarde = MapRange(ADC_waarde, 0, 1024, 70, 15);
 
     // Waarde 2 genereren
     ADMUX |= (1 << MUX0);                           // ADC op poort 1
     ADCSRA |= (1 << ADSC);                          // Conversatie starten
     while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
     ADC_waarde_2 = ADC;                             // Waarde meegeven aan variabele
+    ADC_waarde_2 = MapRange(ADC_waarde_2, 0, 1024, 70, 15);
 
-    // positief verschil genereren
-    if(ADC_waarde < ADC_waarde_2);
-    {
-        verschil = ADC_waarde_2 - ADC_waarde;
-        OCR2A = 15;
-        OCR0A = 70;
-    }
-    if(ADC_waarde > ADC_waarde_2);
-    {
-        verschil = ADC_waarde - ADC_waarde_2;
-        OCR0A = 15;
-        OCR2A = 70;
-    }
+    OCR0A = ADC_waarde;
+    OCR2A = ADC_waarde_2;
+
+
+
 }
 
 int main(void)
