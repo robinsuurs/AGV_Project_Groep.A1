@@ -25,19 +25,19 @@ void init_timer(void)
 {
     ///timmer settup voor stepper motor1
     ///gebruikt timer0 in CTC mode
-    ///met snelheid tussen 70 als langzaamste en 15 als snelste
+    ///met snelheid tussen 70 als snelste en 100 als langzaamste
     TCCR0A  = BV(COM0A0) | BV(WGM01);
     TCCR0B  = BV(CS02);             // clk/256
-    OCR0A   = 15;                   //start snelheid
+    OCR0A   = 80;                   //start snelheid
     SetBit(DDRD, PD6);              //enable output timer D6
 
     ///timmer settup voor stepper motor2
     ///gebruikt timer2 in CTC mode
-    ///met snelheid tussen 70 als langzaamste en 15 als snelste
+    ///met snelheid tussen 70 als snelste en 100 als langzaamste
     TCCR2A  = BV(COM2A0) | BV(WGM21);
     ClearBit(ASSR, AS2);             // interne io klok geselecteerd
     TCCR2B  = BV(CS22) | BV(CS21);   // clk/256
-    OCR2A   = 15;                    // start snelheid
+    OCR2A   = 80;                    // start snelheid
     SetBit(DDRB, PB3);               // enable output timer D11
 }
 
@@ -85,32 +85,34 @@ void ADC_Check(void)
     {
         verschil_0 = ADC_waarde_0 - POT0_BEGIN;
     }
+    ///links
     if(POT0_BEGIN > ADC_waarde_0)
     {
         verschil_0 = POT0_BEGIN - ADC_waarde_0;
         if(verschil_0 < 150)
         {
-            OCR0A = 15 ;
-            OCR2A = 15 ;
+            OCR0A = 95 ;
+            OCR2A = 95 ;
         }
         if(verschil_0 > 150)
         {
-            OCR0A = 20 ;
-            OCR2A = 15 ;
+            OCR0A = 100 ;
+            OCR2A = 80 ;
         }
     }
     if(POT2_BEGIN < ADC_waarde_2)
     {
+        ///rechts
         verschil_2 = ADC_waarde_2 - POT2_BEGIN;
         if(verschil_2 < 150)
         {
-            OCR0A = 15 ;
-            OCR2A = 15 ;
+            OCR0A = 95 ;
+            OCR2A = 95 ;
         }
         if(verschil_2 > 150)
         {
-            OCR0A = 15 ;
-            OCR2A = 20 ;
+            OCR0A = 80 ;
+            OCR2A = 100 ;
         }
 
     }
@@ -124,7 +126,7 @@ int main(void)
     // Insert code
 
     while(1)
-       // ADC_Check();
+        ADC_Check();
 
     ;
 
