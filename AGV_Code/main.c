@@ -81,23 +81,39 @@ void ADC_Check(void)
     ADC_waarde_2 = ADC;                             // Waarde meegeven aan variabele
 
 
-    if(POT0_BEGIN < ADC_waarde_0)
-    {
-        verschil_0 = ADC_waarde_0 - POT0_BEGIN;
-    }
+
     ///links
-    if(POT0_BEGIN > ADC_waarde_0)
+    if((POT0_BEGIN > ADC_waarde_0) && (POT2_BEGIN < ADC_waarde_2))
     {
         verschil_0 = POT0_BEGIN - ADC_waarde_0;
-        if(verschil_0 < 150)
+		verschil_2 = ADC_waarde_2 - POT2_BEGIN;
+        if(verschil_0 > verschil_2)
         {
-            OCR0A = 95 ;
-            OCR2A = 95 ;
+            if((verschil_0 - verschil_2) >= 50)
+            {
+                OCR0A = 100 ;
+                OCR2A = 80 ;
+            }
+            else
+            {
+                OCR0A = 80 ;
+                OCR2A = 80 ;
+            }
+
         }
-        if(verschil_0 > 150)
+        else
         {
-            OCR0A = 100 ;
-            OCR2A = 80 ;
+            if((verschil_2 - verschil_0) >= 50)
+            {
+                OCR0A = 80 ;
+                OCR2A = 100 ;
+            }
+            else
+            {
+                OCR0A = 80 ;
+                OCR2A = 80 ;
+            }
+
         }
     }
     if(POT2_BEGIN < ADC_waarde_2)
