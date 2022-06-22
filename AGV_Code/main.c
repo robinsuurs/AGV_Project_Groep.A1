@@ -28,7 +28,7 @@ void init_timer(void)
     ///met snelheid tussen 70 als snelste en 100 als langzaamste
     TCCR0A  = BV(COM0A0) | BV(WGM01);
     TCCR0B  = BV(CS02);             // clk/256
-    OCR0A   = 80;                   //start snelheid
+    OCR0A   = 95;                   //start snelheid
     SetBit(DDRD, PD6);              //enable output timer D6
 
     ///timmer settup voor stepper motor2
@@ -37,7 +37,7 @@ void init_timer(void)
     TCCR2A  = BV(COM2A0) | BV(WGM21);
     ClearBit(ASSR, AS2);             // interne io klok geselecteerd
     TCCR2B  = BV(CS22) | BV(CS21);   // clk/256
-    OCR2A   = 80;                    // start snelheid
+    OCR2A   = 95;                    // start snelheid
     SetBit(DDRB, PB3);               // enable output timer D11
 }
 
@@ -83,55 +83,45 @@ void ADC_Check(void)
 
 
     ///links
-    if((POT0_BEGIN > ADC_waarde_0) && (POT2_BEGIN < ADC_waarde_2))
+    if((POT2_BEGIN > ADC_waarde_2) && (POT0_BEGIN < ADC_waarde_0))
     {
-        verschil_0 = POT0_BEGIN - ADC_waarde_0;
-		verschil_2 = ADC_waarde_2 - POT2_BEGIN;
+        verschil_2 = POT2_BEGIN - ADC_waarde_2;
+		verschil_0 = ADC_waarde_0 - POT0_BEGIN;
+
         if(verschil_0 > verschil_2)
         {
-            if((verschil_0 - verschil_2) >= 50)
+            if((verschil_0 - verschil_2) >= 20)
             {
-                OCR0A = 100 ;
-                OCR2A = 80 ;
+                OCR0A = 95 ;
+                ClearBit(DDRB, PB3);               // disable output timer D11
             }
             else
             {
-                OCR0A = 80 ;
-                OCR2A = 80 ;
+                SetBit(DDRB, PB3);               // enable output timer D11
+                OCR0A = 95 ;
+                OCR2A = 95 ;
             }
 
         }
         else
         {
-            if((verschil_2 - verschil_0) >= 50)
+            if((verschil_2 - verschil_0) >= 20)
             {
-                OCR0A = 80 ;
-                OCR2A = 100 ;
+                ClearBit(DDRD, PD6);              //disable output timer D6
+                OCR2A = 95 ;
             }
             else
             {
-                OCR0A = 80 ;
-                OCR2A = 80 ;
+                SetBit(DDRD, PD6);              //enable output timer D6
+
+                OCR0A = 95 ;
+                OCR2A = 95 ;
             }
 
         }
     }
-    if(POT2_BEGIN < ADC_waarde_2)
-    {
-        ///rechts
-        verschil_2 = ADC_waarde_2 - POT2_BEGIN;
-        if(verschil_2 < 150)
-        {
-            OCR0A = 95 ;
-            OCR2A = 95 ;
-        }
-        if(verschil_2 > 150)
-        {
-            OCR0A = 80 ;
-            OCR2A = 100 ;
-        }
 
-    }
+
 }
 
 int main(void)
