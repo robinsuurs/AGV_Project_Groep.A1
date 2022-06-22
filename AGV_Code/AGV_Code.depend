@@ -10,7 +10,7 @@
 1652627152 source:c:\users\robin\documents\git_projecten\agv_project_groep.a1\agv_code\fuse.c
 	<avr/io.h>
 
-1655715397 source:c:\users\robin\documents\git_projecten\agv_project_groep.a1\agv_code\main.c
+1655726385 source:c:\users\robin\documents\git_projecten\agv_project_groep.a1\agv_code\main.c
 	<avr/io.h>
 	<avr/interrupt.h>
 	<stdbool.h>

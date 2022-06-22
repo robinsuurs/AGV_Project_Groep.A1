@@ -12,7 +12,8 @@ volatile uint16_t POT0_BEGIN;
 volatile uint16_t POT2_BEGIN;
 volatile uint16_t ADC_waarde_0;
 volatile uint16_t ADC_waarde_2;
-volatile uint16_t verschil;
+volatile uint16_t verschil_0;
+volatile uint16_t verschil_2;
 
 double MapRange(double X, double A1, double A2, double B1, double B2)
 {
@@ -71,20 +72,48 @@ void ADC_Check(void)
     ADCSRA |= (1 << ADSC);                          // Conversatie starten
     while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
     ADC_waarde_0 = ADC;                               // Waarde meegeven aan variabele
-    ADC_waarde_0 = MapRange(ADC_waarde_0, 0, 1024, 70, 15);
+
 
     // Waarde 2 genereren
     ADMUX |= (1 << MUX0);                           // ADC op poort 1
     ADCSRA |= (1 << ADSC);                          // Conversatie starten
     while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
     ADC_waarde_2 = ADC;                             // Waarde meegeven aan variabele
-    ADC_waarde_2 = MapRange(ADC_waarde_2, 0, 1024, 70, 15);
-
-    OCR0A = ADC_waarde_0;
-    OCR2A = ADC_waarde_2;
 
 
+    if(POT0_BEGIN < ADC_waarde_0)
+    {
+        verschil_0 = ADC_waarde_0 - POT0_BEGIN;
+    }
+    if(POT0_BEGIN > ADC_waarde_0)
+    {
+        verschil_0 = POT0_BEGIN - ADC_waarde_0;
+        if(verschil_0 < 150)
+        {
+            OCR0A = 15 ;
+            OCR2A = 15 ;
+        }
+        if(verschil_0 > 150)
+        {
+            OCR0A = 20 ;
+            OCR2A = 15 ;
+        }
+    }
+    if(POT2_BEGIN < ADC_waarde_2)
+    {
+        verschil_2 = ADC_waarde_2 - POT2_BEGIN;
+        if(verschil_2 < 150)
+        {
+            OCR0A = 15 ;
+            OCR2A = 15 ;
+        }
+        if(verschil_2 > 150)
+        {
+            OCR0A = 15 ;
+            OCR2A = 20 ;
+        }
 
+    }
 }
 
 int main(void)
@@ -95,7 +124,7 @@ int main(void)
     // Insert code
 
     while(1)
-        ADC_Check();
+       // ADC_Check();
 
     ;
 
