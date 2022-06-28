@@ -3,7 +3,7 @@ bin\Debug\AGV_Code.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000008  00800100  00000e3c  00000ef0  2**0
+  0 .data         00000008  00800100  00000eae  00000f62  2**0
                   CONTENTS, ALLOC, LOAD, DATA
   1 .text         00000eae  00000000  00000000  000000b4  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
@@ -27,7 +27,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  11 .debug_loc    000006d8  00000000  00000000  000044b8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000050  00000000  00000000  00004a35  2**0
+ 12 .debug_ranges 00000050  00000000  00000000  00004b90  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -88,7 +88,7 @@ Disassembly of section .text:
   84:	11 e0       	ldi	r17, 0x01	; 1
   86:	a0 e0       	ldi	r26, 0x00	; 0
   88:	b1 e0       	ldi	r27, 0x01	; 1
-  8a:	ec e3       	ldi	r30, 0x3C	; 60
+  8a:	ee ea       	ldi	r30, 0xAE	; 174
   8c:	fe e0       	ldi	r31, 0x0E	; 14
 
   8e:	02 c0       	rjmp	.+4      	; 0x94 <.do_copy_data_start>
@@ -101,8 +101,8 @@ Disassembly of section .text:
   94:	a8 30       	cpi	r26, 0x08	; 8
   96:	b1 07       	cpc	r27, r17
   98:	d9 f7       	brne	.-10     	; 0x90 <.do_copy_data_loop>
-  9a:	0e 94 3d 02 	call	0x47a	; 0x47a <main>
-  9e:	0c 94 1c 07 	jmp	0xe38	; 0xe38 <_exit>
+  9a:	0e 94 76 02 	call	0x4ec	; 0x4ec <main>
+  9e:	0c 94 55 07 	jmp	0xeaa	; 0xeaa <_exit>
 
 
 000000a2 <__bad_interrupt>:
@@ -772,10 +772,10 @@ bool Bocht_Rechts(void)
 
 int main(void)
 {
- 47a:	df 93       	push	r29
- 47c:	cf 93       	push	r28
- 47e:	cd b7       	in	r28, 0x3d	; 61
- 480:	de b7       	in	r29, 0x3e	; 62
+ 4ec:	df 93       	push	r29
+ 4ee:	cf 93       	push	r28
+ 4f0:	cd b7       	in	r28, 0x3d	; 61
+ 4f2:	de b7       	in	r29, 0x3e	; 62
     init_timer();
  4f4:	0e 94 d2 00 	call	0x1a4	; 0x1a4 <init_timer>
     init_adc();
