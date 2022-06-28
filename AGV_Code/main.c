@@ -132,6 +132,30 @@ void Navigeer(void)
     }
 }
 
+bool Bocht_Rechts(void)
+{
+    ///maak een bocht met 90 graden naar rechts
+    bool Toggle_check;
+    int Step_Count;
+
+    ClearBit(DDRB, PB3);               // disable output timer D11
+    do
+    {
+        if(bit_is_set(PINB, PB3) && !Toggle_check)
+        {
+            Toggle_check = true;
+            Step_Count++;
+        }
+        else
+        {
+            Toggle_check = false;
+        }
+
+    }while(Step_Count < 50);
+
+    SetBit(DDRB, PB3);               // enable output timer D11
+    return(true);
+}
 
 int main(void)
 {
