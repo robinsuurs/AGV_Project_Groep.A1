@@ -141,10 +141,13 @@ bool Bocht_Rechts(void)
     ClearBit(DDRB, PB3);               // disable output timer D11
     do
     {
-        if(bit_is_set(PINB, PB3) && !Toggle_check)
+        if(bit_is_set(PINB, PB3))
         {
+            if(!Toggle_check)
+            {
             Toggle_check = true;
             Step_Count++;
+            }
         }
         else
         {
