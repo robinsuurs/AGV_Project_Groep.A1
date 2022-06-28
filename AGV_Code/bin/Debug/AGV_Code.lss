@@ -3,6 +3,7 @@ bin\Debug\AGV_Code.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
+
   0 .data         00000008  00800100  00000e3c  00000ef0  2**0
                   CONTENTS, ALLOC, LOAD, DATA
   1 .text         00000e3c  00000000  00000000  000000b4  2**1
@@ -28,6 +29,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
  11 .debug_loc    000006d8  00000000  00000000  0000435d  2**0
                   CONTENTS, READONLY, DEBUGGING
  12 .debug_ranges 00000050  00000000  00000000  00004a35  2**0
+
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -54,7 +56,7 @@ Disassembly of section .text:
   48:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   4c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   50:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
-  54:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  54:	0c 94 53 00 	jmp	0xa6	; 0xa6 <__vector_21>
   58:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   5c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   60:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
@@ -78,7 +80,9 @@ Disassembly of section .text:
   7c:	1d 92       	st	X+, r1
 
 0000007e <.do_clear_bss_start>:
+
   7e:	a4 31       	cpi	r26, 0x14	; 20
+
   80:	b1 07       	cpc	r27, r17
   82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
 
@@ -86,8 +90,10 @@ Disassembly of section .text:
   84:	11 e0       	ldi	r17, 0x01	; 1
   86:	a0 e0       	ldi	r26, 0x00	; 0
   88:	b1 e0       	ldi	r27, 0x01	; 1
+
   8a:	ec e3       	ldi	r30, 0x3C	; 60
   8c:	fe e0       	ldi	r31, 0x0E	; 14
+
   8e:	02 c0       	rjmp	.+4      	; 0x94 <.do_copy_data_start>
 
 00000090 <.do_copy_data_loop>:
@@ -98,11 +104,14 @@ Disassembly of section .text:
   94:	a8 30       	cpi	r26, 0x08	; 8
   96:	b1 07       	cpc	r27, r17
   98:	d9 f7       	brne	.-10     	; 0x90 <.do_copy_data_loop>
+
   9a:	0e 94 3d 02 	call	0x47a	; 0x47a <main>
   9e:	0c 94 1c 07 	jmp	0xe38	; 0xe38 <_exit>
 
+
 000000a2 <__bad_interrupt>:
   a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
 
 000000a6 <MapRange>:
 volatile uint16_t ADC_waarde_2;
@@ -111,41 +120,42 @@ volatile uint16_t verschil_2;
 
 double MapRange(double X, double A1, double A2, double B1, double B2)
 {
-  a6:	af 92       	push	r10
-  a8:	bf 92       	push	r11
-  aa:	cf 92       	push	r12
-  ac:	df 92       	push	r13
-  ae:	ef 92       	push	r14
-  b0:	ff 92       	push	r15
-  b2:	0f 93       	push	r16
-  b4:	1f 93       	push	r17
-  b6:	df 93       	push	r29
-  b8:	cf 93       	push	r28
-  ba:	cd b7       	in	r28, 0x3d	; 61
-  bc:	de b7       	in	r29, 0x3e	; 62
-  be:	64 97       	sbiw	r28, 0x14	; 20
-  c0:	0f b6       	in	r0, 0x3f	; 63
-  c2:	f8 94       	cli
-  c4:	de bf       	out	0x3e, r29	; 62
-  c6:	0f be       	out	0x3f, r0	; 63
-  c8:	cd bf       	out	0x3d, r28	; 61
-  ca:	6d 83       	std	Y+5, r22	; 0x05
-  cc:	7e 83       	std	Y+6, r23	; 0x06
-  ce:	8f 83       	std	Y+7, r24	; 0x07
-  d0:	98 87       	std	Y+8, r25	; 0x08
-  d2:	29 87       	std	Y+9, r18	; 0x09
-  d4:	3a 87       	std	Y+10, r19	; 0x0a
-  d6:	4b 87       	std	Y+11, r20	; 0x0b
-  d8:	5c 87       	std	Y+12, r21	; 0x0c
-  da:	ed 86       	std	Y+13, r14	; 0x0d
-  dc:	fe 86       	std	Y+14, r15	; 0x0e
-  de:	0f 87       	std	Y+15, r16	; 0x0f
-  e0:	18 8b       	std	Y+16, r17	; 0x10
-  e2:	a9 8a       	std	Y+17, r10	; 0x11
-  e4:	ba 8a       	std	Y+18, r11	; 0x12
-  e6:	cb 8a       	std	Y+19, r12	; 0x13
-  e8:	dc 8a       	std	Y+20, r13	; 0x14
+ 13a:	af 92       	push	r10
+ 13c:	bf 92       	push	r11
+ 13e:	cf 92       	push	r12
+ 140:	df 92       	push	r13
+ 142:	ef 92       	push	r14
+ 144:	ff 92       	push	r15
+ 146:	0f 93       	push	r16
+ 148:	1f 93       	push	r17
+ 14a:	df 93       	push	r29
+ 14c:	cf 93       	push	r28
+ 14e:	cd b7       	in	r28, 0x3d	; 61
+ 150:	de b7       	in	r29, 0x3e	; 62
+ 152:	64 97       	sbiw	r28, 0x14	; 20
+ 154:	0f b6       	in	r0, 0x3f	; 63
+ 156:	f8 94       	cli
+ 158:	de bf       	out	0x3e, r29	; 62
+ 15a:	0f be       	out	0x3f, r0	; 63
+ 15c:	cd bf       	out	0x3d, r28	; 61
+ 15e:	6d 83       	std	Y+5, r22	; 0x05
+ 160:	7e 83       	std	Y+6, r23	; 0x06
+ 162:	8f 83       	std	Y+7, r24	; 0x07
+ 164:	98 87       	std	Y+8, r25	; 0x08
+ 166:	29 87       	std	Y+9, r18	; 0x09
+ 168:	3a 87       	std	Y+10, r19	; 0x0a
+ 16a:	4b 87       	std	Y+11, r20	; 0x0b
+ 16c:	5c 87       	std	Y+12, r21	; 0x0c
+ 16e:	ed 86       	std	Y+13, r14	; 0x0d
+ 170:	fe 86       	std	Y+14, r15	; 0x0e
+ 172:	0f 87       	std	Y+15, r16	; 0x0f
+ 174:	18 8b       	std	Y+16, r17	; 0x10
+ 176:	a9 8a       	std	Y+17, r10	; 0x11
+ 178:	ba 8a       	std	Y+18, r11	; 0x12
+ 17a:	cb 8a       	std	Y+19, r12	; 0x13
+ 17c:	dc 8a       	std	Y+20, r13	; 0x14
     double Y = B1 + (X-A1)*((B2-B1)/(A2-A1));
+
   ea:	6d 81       	ldd	r22, Y+5	; 0x05
   ec:	7e 81       	ldd	r23, Y+6	; 0x06
   ee:	8f 81       	ldd	r24, Y+7	; 0x07
@@ -210,49 +220,51 @@ double MapRange(double X, double A1, double A2, double B1, double B2)
  170:	9a 83       	std	Y+2, r25	; 0x02
  172:	ab 83       	std	Y+3, r26	; 0x03
  174:	bc 83       	std	Y+4, r27	; 0x04
-    return Y;
- 176:	89 81       	ldd	r24, Y+1	; 0x01
- 178:	9a 81       	ldd	r25, Y+2	; 0x02
- 17a:	ab 81       	ldd	r26, Y+3	; 0x03
- 17c:	bc 81       	ldd	r27, Y+4	; 0x04
-}
- 17e:	bc 01       	movw	r22, r24
- 180:	cd 01       	movw	r24, r26
- 182:	64 96       	adiw	r28, 0x14	; 20
- 184:	0f b6       	in	r0, 0x3f	; 63
- 186:	f8 94       	cli
- 188:	de bf       	out	0x3e, r29	; 62
- 18a:	0f be       	out	0x3f, r0	; 63
- 18c:	cd bf       	out	0x3d, r28	; 61
- 18e:	cf 91       	pop	r28
- 190:	df 91       	pop	r29
- 192:	1f 91       	pop	r17
- 194:	0f 91       	pop	r16
- 196:	ff 90       	pop	r15
- 198:	ef 90       	pop	r14
- 19a:	df 90       	pop	r13
- 19c:	cf 90       	pop	r12
- 19e:	bf 90       	pop	r11
- 1a0:	af 90       	pop	r10
- 1a2:	08 95       	ret
 
-000001a4 <init_timer>:
+    return Y;
+ 20a:	89 81       	ldd	r24, Y+1	; 0x01
+ 20c:	9a 81       	ldd	r25, Y+2	; 0x02
+ 20e:	ab 81       	ldd	r26, Y+3	; 0x03
+ 210:	bc 81       	ldd	r27, Y+4	; 0x04
+}
+ 212:	bc 01       	movw	r22, r24
+ 214:	cd 01       	movw	r24, r26
+ 216:	64 96       	adiw	r28, 0x14	; 20
+ 218:	0f b6       	in	r0, 0x3f	; 63
+ 21a:	f8 94       	cli
+ 21c:	de bf       	out	0x3e, r29	; 62
+ 21e:	0f be       	out	0x3f, r0	; 63
+ 220:	cd bf       	out	0x3d, r28	; 61
+ 222:	cf 91       	pop	r28
+ 224:	df 91       	pop	r29
+ 226:	1f 91       	pop	r17
+ 228:	0f 91       	pop	r16
+ 22a:	ff 90       	pop	r15
+ 22c:	ef 90       	pop	r14
+ 22e:	df 90       	pop	r13
+ 230:	cf 90       	pop	r12
+ 232:	bf 90       	pop	r11
+ 234:	af 90       	pop	r10
+ 236:	08 95       	ret
+
+00000238 <init_timer>:
 
 void init_timer(void)
 {
- 1a4:	df 93       	push	r29
- 1a6:	cf 93       	push	r28
- 1a8:	cd b7       	in	r28, 0x3d	; 61
- 1aa:	de b7       	in	r29, 0x3e	; 62
+ 238:	df 93       	push	r29
+ 23a:	cf 93       	push	r28
+ 23c:	cd b7       	in	r28, 0x3d	; 61
+ 23e:	de b7       	in	r29, 0x3e	; 62
     ///timmer settup voor stepper motor1
     ///gebruikt timer0 in CTC mode
     ///met snelheid tussen 70 als snelste en 100 als langzaamste
     TCCR0A  = BV(COM0A0) | BV(WGM01);
- 1ac:	e4 e4       	ldi	r30, 0x44	; 68
- 1ae:	f0 e0       	ldi	r31, 0x00	; 0
- 1b0:	82 e4       	ldi	r24, 0x42	; 66
- 1b2:	80 83       	st	Z, r24
+ 240:	e4 e4       	ldi	r30, 0x44	; 68
+ 242:	f0 e0       	ldi	r31, 0x00	; 0
+ 244:	82 e4       	ldi	r24, 0x42	; 66
+ 246:	80 83       	st	Z, r24
     TCCR0B  = BV(CS02);             // clk/256
+
  1b4:	e5 e4       	ldi	r30, 0x45	; 69
  1b6:	f0 e0       	ldi	r31, 0x00	; 0
  1b8:	84 e0       	ldi	r24, 0x04	; 4
@@ -262,32 +274,34 @@ void init_timer(void)
  1be:	f0 e0       	ldi	r31, 0x00	; 0
  1c0:	8f e5       	ldi	r24, 0x5F	; 95
  1c2:	80 83       	st	Z, r24
+
     SetBit(DDRD, PD6);              //enable output timer D6
- 1c4:	aa e2       	ldi	r26, 0x2A	; 42
- 1c6:	b0 e0       	ldi	r27, 0x00	; 0
- 1c8:	ea e2       	ldi	r30, 0x2A	; 42
- 1ca:	f0 e0       	ldi	r31, 0x00	; 0
- 1cc:	80 81       	ld	r24, Z
- 1ce:	80 64       	ori	r24, 0x40	; 64
- 1d0:	8c 93       	st	X, r24
+ 258:	aa e2       	ldi	r26, 0x2A	; 42
+ 25a:	b0 e0       	ldi	r27, 0x00	; 0
+ 25c:	ea e2       	ldi	r30, 0x2A	; 42
+ 25e:	f0 e0       	ldi	r31, 0x00	; 0
+ 260:	80 81       	ld	r24, Z
+ 262:	80 64       	ori	r24, 0x40	; 64
+ 264:	8c 93       	st	X, r24
 
     ///timmer settup voor stepper motor2
     ///gebruikt timer2 in CTC mode
     ///met snelheid tussen 70 als snelste en 100 als langzaamste
     TCCR2A  = BV(COM2A0) | BV(WGM21);
- 1d2:	e0 eb       	ldi	r30, 0xB0	; 176
- 1d4:	f0 e0       	ldi	r31, 0x00	; 0
- 1d6:	82 e4       	ldi	r24, 0x42	; 66
- 1d8:	80 83       	st	Z, r24
+ 266:	e0 eb       	ldi	r30, 0xB0	; 176
+ 268:	f0 e0       	ldi	r31, 0x00	; 0
+ 26a:	82 e4       	ldi	r24, 0x42	; 66
+ 26c:	80 83       	st	Z, r24
     ClearBit(ASSR, AS2);             // interne io klok geselecteerd
- 1da:	a6 eb       	ldi	r26, 0xB6	; 182
- 1dc:	b0 e0       	ldi	r27, 0x00	; 0
- 1de:	e6 eb       	ldi	r30, 0xB6	; 182
- 1e0:	f0 e0       	ldi	r31, 0x00	; 0
- 1e2:	80 81       	ld	r24, Z
- 1e4:	8f 7d       	andi	r24, 0xDF	; 223
- 1e6:	8c 93       	st	X, r24
+ 26e:	a6 eb       	ldi	r26, 0xB6	; 182
+ 270:	b0 e0       	ldi	r27, 0x00	; 0
+ 272:	e6 eb       	ldi	r30, 0xB6	; 182
+ 274:	f0 e0       	ldi	r31, 0x00	; 0
+ 276:	80 81       	ld	r24, Z
+ 278:	8f 7d       	andi	r24, 0xDF	; 223
+ 27a:	8c 93       	st	X, r24
     TCCR2B  = BV(CS22) | BV(CS21);   // clk/256
+
  1e8:	e1 eb       	ldi	r30, 0xB1	; 177
  1ea:	f0 e0       	ldi	r31, 0x00	; 0
  1ec:	86 e0       	ldi	r24, 0x06	; 6
@@ -297,28 +311,30 @@ void init_timer(void)
  1f2:	f0 e0       	ldi	r31, 0x00	; 0
  1f4:	8f e5       	ldi	r24, 0x5F	; 95
  1f6:	80 83       	st	Z, r24
-    SetBit(DDRB, PB3);               // enable output timer D11
- 1f8:	a4 e2       	ldi	r26, 0x24	; 36
- 1fa:	b0 e0       	ldi	r27, 0x00	; 0
- 1fc:	e4 e2       	ldi	r30, 0x24	; 36
- 1fe:	f0 e0       	ldi	r31, 0x00	; 0
- 200:	80 81       	ld	r24, Z
- 202:	88 60       	ori	r24, 0x08	; 8
- 204:	8c 93       	st	X, r24
-}
- 206:	cf 91       	pop	r28
- 208:	df 91       	pop	r29
- 20a:	08 95       	ret
 
-0000020c <init_adc>:
+    SetBit(DDRB, PB3);               // enable output timer D11
+ 28c:	a4 e2       	ldi	r26, 0x24	; 36
+ 28e:	b0 e0       	ldi	r27, 0x00	; 0
+ 290:	e4 e2       	ldi	r30, 0x24	; 36
+ 292:	f0 e0       	ldi	r31, 0x00	; 0
+ 294:	80 81       	ld	r24, Z
+ 296:	88 60       	ori	r24, 0x08	; 8
+ 298:	8c 93       	st	X, r24
+}
+ 29a:	cf 91       	pop	r28
+ 29c:	df 91       	pop	r29
+ 29e:	08 95       	ret
+
+000002a0 <init_adc>:
 
 void init_adc(void)
 {
- 20c:	df 93       	push	r29
- 20e:	cf 93       	push	r28
- 210:	cd b7       	in	r28, 0x3d	; 61
- 212:	de b7       	in	r29, 0x3e	; 62
+ 2a0:	df 93       	push	r29
+ 2a2:	cf 93       	push	r28
+ 2a4:	cd b7       	in	r28, 0x3d	; 61
+ 2a6:	de b7       	in	r29, 0x3e	; 62
     ADMUX |= (1 << REFS0);                                  // AVCC als referentiespanning
+
  214:	ac e7       	ldi	r26, 0x7C	; 124
  216:	b0 e0       	ldi	r27, 0x00	; 0
  218:	ec e7       	ldi	r30, 0x7C	; 124
@@ -677,6 +693,7 @@ void Navigeer(void)
 
 int main(void)
 {
+
  47a:	df 93       	push	r29
  47c:	cf 93       	push	r28
  47e:	cd b7       	in	r28, 0x3d	; 61
