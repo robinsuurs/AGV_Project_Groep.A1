@@ -79,8 +79,12 @@ void ADC_Check(void)
     ADCSRA |= (1 << ADSC);                          // Conversatie starten
     while (ADCSRA & (1 << ADSC));{}                 // Wacht tot conversatie klaar is
     ADC_waarde_2 = ADC;                             // Waarde meegeven aan variabele
+}
 
 
+
+void Navigeer(void)
+{
 
     ///links
     if((POT2_BEGIN > ADC_waarde_2) && (POT0_BEGIN < ADC_waarde_0))
@@ -120,9 +124,8 @@ void ADC_Check(void)
 
         }
     }
-
-
 }
+
 
 int main(void)
 {
@@ -133,6 +136,7 @@ int main(void)
 
     while(1)
         ADC_Check();
+        Navigeer();
 
     ;
 
