@@ -157,6 +157,22 @@ bool Bocht_Rechts(void)
     }while(Step_Count < 50);
 
     SetBit(DDRB, PB3);               // enable output timer D11
+
+    while(Step_Count<100)
+    {
+        if(bit_is_set(PINB, PB3))
+        {
+            if(!Toggle_check)
+            {
+            Toggle_check = true;
+            Step_Count++;
+            }
+        }
+        else
+        {
+            Toggle_check = false;
+        }
+    }
     return(true);
 }
 
@@ -169,8 +185,9 @@ int main(void)
     // Insert code
 
     while(1)
-        ADC_Check();
-        Navigeer();
+       // ADC_Check();
+       // Navigeer();
+       Bocht_Rechts();
 
     ;
 
